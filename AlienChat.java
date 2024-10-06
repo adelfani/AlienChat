@@ -107,21 +107,28 @@ public class AlienChat {
             if (maybeMessage != null) {
                 var valid = validateMessage(maybeMessage);
                 System.out.println("% The following message " + (valid ? "IS" : "IS NOT") + " from our clan:");
+                // checking the validion of the message for decryption
                 if (valid) {
+                    // after checking the validation we splited the line variable and store it in
+                    // array called msgs
                     String[] msgs = line.split("[, ]");
+                    // we've initiated an new variable to store the new message after decryption
                     String newMsg = "";
                     for (int i = 0; msgs.length > i; i++) {
+                        // this condition to to store the connection info at the beginning of the
+                        // message
                         if (i < 3) {
                             newMsg = newMsg + " " + msgs[i];
-                        } else if (i == 4) {
-                            continue;
                         } else {
+                            // here we store the message after decryption
                             newMsg = newMsg + " " + Cipher.decrypt(msgs[i]);
                         }
                     }
                     line = newMsg;
                 }
             }
+            // here we print the decrypted message if its valid but if its not valid it will
+            // print it as it is
             System.out.println(line);
         });
     }
@@ -153,12 +160,8 @@ public class AlienChat {
      */
     static void relayToServer(String recognitionCode, PrintStream toServer) {
         forEachLine("user", System.in, (line) -> {
-            /*
-             * The following code would encrypt an outgoing message
-             * Cipher c = new Cipher();
-             * line=c.encrypt(line);
-             */
-            line = "aabbbbcddcabab " + line;
+            // Encrypts message. The recognition code is not added automatically
+            // it must be typed at the start of the message manually by the user.
             line = Cipher.encrypt(line);
             toServer.println(line);
         });
